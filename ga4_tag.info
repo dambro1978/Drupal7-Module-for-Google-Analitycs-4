@@ -1,0 +1,5 @@
+name = GA4 Tag
+description = Aggiunge lo script gtag.js di Google Analytics 4 (GA4) al sito.
+core = 7.x
+package = Custom
+configure = admin/config/system/ga4

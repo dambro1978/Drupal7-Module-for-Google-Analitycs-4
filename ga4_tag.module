@@ -1,0 +1,71 @@
+<?php
+/**
+ * Implements hook_menu().
+ */
+function ga4_tag_menu() {
+  $items['admin/config/system/ga4'] = array(
+    'title' => 'Google Analytics 4',
+    'description' => 'Configura il Measurement ID per GA4.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('ga4_tag_admin_form'),
+    'access arguments' => array('administer site configuration'),
+    'type' => MENU_NORMAL_ITEM,
+  );
+  return $items;
+}
+
+/**
+ * Form builder.
+ */
+function ga4_tag_admin_form($form, &$form_state) {
+  $form['ga4_tag_measurement_id'] = array(
+    '#type' => 'textfield',
+    '#title' => t('GA4 Measurement ID'),
+    '#default_value' => variable_get('ga4_tag_measurement_id', ''),
+    '#description' => t('Inserisci il tuo Measurement ID di Google Analytics 4 (es. G-XXXXXXXXXX).'),
+    '#required' => TRUE,
+  );
+
+  return system_settings_form($form);
+}
+
+/**
+ * Validation.
+ */
+function ga4_tag_admin_form_validate($form, &$form_state) {
+  $id = trim($form_state['values']['ga4_tag_measurement_id']);
+  if (!preg_match('/^G-[A-Z0-9]{10}$/i', $id)) {
+    form_set_error('ga4_tag_measurement_id', t('Il Measurement ID non è nel formato corretto. Deve essere come: G-XXXXXXXXXX'));
+  }
+}
+
+/**
+ * Implements hook_preprocess_html().
+ * Stampa ESATTAMENTE il tag richiesto.
+ */
+function ga4_tag_preprocess_html(&$variables) {
+  static $added = FALSE;
+  if ($added) {
+    return;
+  }
+
+  $measurement_id = trim(variable_get('ga4_tag_measurement_id', ''));
+  if (empty($measurement_id)) {
+    return;
+  }
+
+  // Costruiamo l'intero blocco come una singola stringa
+  $ga4_code = '<script async src="https://www.googletagmanager.com/gtag/js?id=' . check_plain($measurement_id) . '" ></script>'
+            . '<script> window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag(\'js\', new Date()); gtag(\'config\', "' . check_plain($measurement_id) . '"); </script>';
+
+  // Lo aggiungiamo come un unico elemento markup nell'head
+  $element = array(
+    '#type' => 'markup',
+    '#markup' => $ga4_code,
+    '#weight' => -1000, // molto in alto nell'head
+  );
+
+  drupal_add_html_head($element, 'ga4_tag_full_block');
+
+  $added = TRUE;
+}
