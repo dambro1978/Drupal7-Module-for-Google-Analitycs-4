@@ -1,5 +1,6 @@
 name = GA4 Tag
-description = Adds script gtag.js of Google Analytics 4 (GA4) Powereb by Giuseppe D'Ambrosio at Noahdambrosio.com https:noahdambrosio.com.
+description = Adds script gtag.js of Google Analytics 4 (GA4) Powereb by Giuseppe D'Ambrosio at Noahdambrosio.com https://noahdambrosio.com.
+
 core = 7.x
 package = Custom
 configure = admin/config/system/ga4
