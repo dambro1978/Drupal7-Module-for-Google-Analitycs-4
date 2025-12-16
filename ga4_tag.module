@@ -1,5 +1,6 @@
 <?php
 /**
+ * Powereb by Giuseppe D'Ambrosio at Noahdambrosio.com https:noahdambrosio.com
  * Implements hook_menu().
  */
 function ga4_tag_menu() {
@@ -68,4 +69,5 @@ function ga4_tag_preprocess_html(&$variables) {
   drupal_add_html_head($element, 'ga4_tag_full_block');
 
   $added = TRUE;
+
 }
