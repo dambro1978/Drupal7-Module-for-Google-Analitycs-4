@@ -1,7 +1,8 @@
 <?php
 
 /**
- * Form di configurazione per GA4.
+ * Configuration form GA4.
+Powereb by Giuseppe D'Ambrosio at Noahdambrosio.com https:noahdambrosio.com
  */
 function ga4_tag_admin_form($form, &$form_state) {
   $form['ga4_tag_measurement_id'] = array(
